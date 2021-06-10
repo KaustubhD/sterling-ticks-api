@@ -1,6 +1,7 @@
 package org.ibm.sterling_ticks.controllers;
 
 import org.ibm.sterling_ticks.model.enitities.UserModel;
+import org.ibm.sterling_ticks.model.exceptions.InvalidDataException;
 import org.ibm.sterling_ticks.services.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,8 +26,8 @@ class RegistrationController {
 	
 	
 	@PostMapping(value = "/register", consumes = "application/json", produces="application/json")
-	public void addUser(@RequestBody UserModel user) {
-		registrationService.addUser(user);
+	public void addUser(@RequestBody UserModel user) throws InvalidDataException {
+			registrationService.addUser(user);
 	}
 	
 //	@GetMapping(value = "/{userName}", produces = "application/json")

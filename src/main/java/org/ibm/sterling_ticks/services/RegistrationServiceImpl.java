@@ -1,10 +1,12 @@
 package org.ibm.sterling_ticks.services;
 
 import java.security.SecureRandom;
+import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Date;
 
 import org.ibm.sterling_ticks.model.enitities.UserModel;
+import org.ibm.sterling_ticks.model.exceptions.InvalidDataException;
 import org.ibm.sterling_ticks.repositories.UserRepository;
 import org.ibm.sterling_ticks.security.encoder.BCryptEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +19,17 @@ public class RegistrationServiceImpl implements RegistrationService {
 	private UserRepository repo;
 	
 	@Override
-	public Boolean addUser(UserModel user) {
+	public Boolean addUser(UserModel user) throws InvalidDataException {
 		if(user.getEmail()!=null&&user.getUserName()!=null&&user.getPassword()!=null) {
 			BCryptEncoder encoder = new BCryptEncoder();
 			user.setPassword(encoder.encode(user.getPassword()));
 			user.setDateCreated(new Date());
-			repo.save(user);
-
+			try {
+				repo.save(user);
+			}
+			catch(Exception e) {
+				throw new InvalidDataException();
+			}
 			return true;	
 		}
 		return false;
