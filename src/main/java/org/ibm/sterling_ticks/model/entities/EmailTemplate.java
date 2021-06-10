@@ -1,4 +1,4 @@
-package org.ibm.sterling_ticks.entities;
+package org.ibm.sterling_ticks.model.entities;
 
 public class EmailTemplate {
 	public String subject;

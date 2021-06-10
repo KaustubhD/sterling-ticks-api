@@ -1,6 +1,6 @@
 package org.ibm.sterling_ticks.services;
 
-import org.ibm.sterling_ticks.model.enitities.UserModel;
+import org.ibm.sterling_ticks.model.entities.UserModel;
 import org.ibm.sterling_ticks.model.exceptions.InvalidCredentialException;
 import org.ibm.sterling_ticks.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

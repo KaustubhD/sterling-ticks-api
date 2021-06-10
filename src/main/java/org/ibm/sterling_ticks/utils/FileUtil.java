@@ -6,9 +6,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
-import org.ibm.sterling_ticks.entities.EmailTemplate;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.ibm.sterling_ticks.model.entities.EmailTemplate;
 
 public class FileUtil {
 	

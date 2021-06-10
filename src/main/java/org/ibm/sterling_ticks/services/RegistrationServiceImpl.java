@@ -2,7 +2,7 @@ package org.ibm.sterling_ticks.services;
 
 import java.util.Date;
 
-import org.ibm.sterling_ticks.model.enitities.UserModel;
+import org.ibm.sterling_ticks.model.entities.UserModel;
 import org.ibm.sterling_ticks.model.exceptions.InvalidDataException;
 import org.ibm.sterling_ticks.repositories.UserRepository;
 import org.ibm.sterling_ticks.security.encoder.BCryptEncoder;

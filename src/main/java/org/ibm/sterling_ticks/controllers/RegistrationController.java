@@ -1,6 +1,6 @@
 package org.ibm.sterling_ticks.controllers;
 
-import org.ibm.sterling_ticks.model.enitities.UserModel;
+import org.ibm.sterling_ticks.model.entities.UserModel;
 import org.ibm.sterling_ticks.model.exceptions.InvalidDataException;
 import org.ibm.sterling_ticks.services.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 
-@RestController("")
-@RequestMapping("")
+@RestController
 @CrossOrigin
 class RegistrationController {
 	
