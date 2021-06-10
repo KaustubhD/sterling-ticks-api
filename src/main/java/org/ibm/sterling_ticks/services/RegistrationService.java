@@ -9,7 +9,4 @@ public interface RegistrationService {
 	
 	Boolean deleteUser(UserModel user);
 
-	UserModel getByUserName(String username);
-
-	
 }

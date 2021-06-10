@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController("")
-@RequestMapping("sterling-ticks/")
+@RequestMapping("")
 @CrossOrigin
 class RegistrationController {
 	
@@ -30,9 +30,5 @@ class RegistrationController {
 			registrationService.addUser(user);
 	}
 	
-//	@GetMapping(value = "/{userName}", produces = "application/json")
-//	public UserModel getUser(@PathVariable("userName") String username){
-//		return registrationService.getByUserName(username);
-//	}
-	
+
 }

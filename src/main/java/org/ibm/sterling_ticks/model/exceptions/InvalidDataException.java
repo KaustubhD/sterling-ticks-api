@@ -6,4 +6,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(code = HttpStatus.BAD_REQUEST , reason = "Invalid Parameters")
 public class InvalidDataException extends Exception{
 
+	public InvalidDataException(){
+		super();
+	}
+	
+	public InvalidDataException(String message){
+		super(message);
+	}
 }

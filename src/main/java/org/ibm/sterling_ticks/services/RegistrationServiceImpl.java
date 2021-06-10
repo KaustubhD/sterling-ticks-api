@@ -1,8 +1,5 @@
 package org.ibm.sterling_ticks.services;
 
-import java.security.SecureRandom;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Date;
 
 import org.ibm.sterling_ticks.model.enitities.UserModel;
@@ -17,41 +14,26 @@ public class RegistrationServiceImpl implements RegistrationService {
 
 	@Autowired
 	private UserRepository repo;
-	
+
 	@Override
 	public Boolean addUser(UserModel user) throws InvalidDataException {
-		if(user.getEmail()!=null&&user.getUserName()!=null&&user.getPassword()!=null) {
-			BCryptEncoder encoder = new BCryptEncoder();
-			user.setPassword(encoder.encode(user.getPassword()));
-			user.setDateCreated(new Date());
-			try {
-				repo.save(user);
-			}
-			catch(Exception e) {
-				throw new InvalidDataException();
-			}
-			return true;	
+		BCryptEncoder encoder = new BCryptEncoder();
+		user.setPassword(encoder.encode(user.getPassword()));
+		user.setDateCreated(new Date());
+		try {
+			repo.save(user);
+			return true;
+		} catch (Exception e) {
+			throw new InvalidDataException();
 		}
-		return false;
-
 	}
 
 	@Override
 	public Boolean deleteUser(UserModel user) {
-		// TODO Auto-generated method stub
-		if(repo.findById(user.getId()) != null) {
+		if (repo.findById(user.getId()) != null) {
 			repo.delete(user);
 			return true;
 		}
 		return false;
 	}
-
-	@Override
-	public UserModel getByUserName(String username) {
-		// TODO Auto-generated method stub
-		return repo.findByUserName(username);
-	}
-
-	
-
 }
