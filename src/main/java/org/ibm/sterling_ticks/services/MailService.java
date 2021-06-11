@@ -41,10 +41,15 @@ public class MailService {
 		return true;
 	}
 	
-	public boolean sendOtpMail(String email, int otp) throws IOException {
-		EmailTemplate template = FileUtil.readOtpEmailTemplate();
-		template.body = String.format(template.body, String.valueOf(otp));
-		
-		return sendMail(email, template.subject, template.body);
+	public boolean sendOtpMail(String email, int otp){
+		try {
+			EmailTemplate template = FileUtil.readOtpEmailTemplate();
+			template.body = String.format(template.body, String.valueOf(otp));
+			
+			return sendMail(email, template.subject, template.body);			
+		}
+		catch(IOException e) {
+			throw new RuntimeException(e);
+		} 
 	}
 }

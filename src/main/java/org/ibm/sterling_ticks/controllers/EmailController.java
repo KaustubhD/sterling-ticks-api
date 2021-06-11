@@ -1,6 +1,5 @@
 package org.ibm.sterling_ticks.controllers;
 
-import java.io.IOException;
 
 import org.ibm.sterling_ticks.services.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ public class EmailController {
 	public ResponseEntity<?> sendEmail(@RequestBody EmailDto dto) {
 		try {
 			mailService.sendOtpMail(dto.receiverEmail, 12345);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			return ResponseEntity
 					.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(e.getMessage());
