@@ -1,17 +1,21 @@
 package org.ibm.sterling_ticks.model.entities;
 
-import java.security.SecureRandom;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,7 +34,7 @@ public class UserModel {
 	@GeneratedValue
 	private int id;
 	
-	@Column(name = "username", unique = true, nullable = false, length=16)
+	@Column(name = "username", unique = true, nullable = false, length = 16)
 	private String userName;
 	
 	@Column(name="password",length=65, nullable = false)
@@ -39,9 +43,18 @@ public class UserModel {
 	@Column(name="email", unique = true, nullable = false)
 	private String email;
 	
-	@Column(name="created_at")
+	@Column(name = "date_created", nullable = false)
+	@CreationTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateCreated;
 	
+	@ManyToMany
+	@JoinTable(
+			name = "user_role",
+			joinColumns = @JoinColumn(name = "user_id"),
+			inverseJoinColumns = @JoinColumn(name = "role_id"))
+	private Set<RoleModel> roles = new HashSet<>();
+
 	@Override
 	public String toString() {
 		return "UserModel [id=" + id + ", userName=" + userName + ", password=" + password + ", email=" + email
@@ -96,6 +109,14 @@ public class UserModel {
 
 	public void setPhoneNo(String phoneNo) {
 		this.phoneNo = phoneNo;
+	}
+	
+	public Set<RoleModel> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<RoleModel> roles) {
+		this.roles = roles;
 	}
 }
 	
