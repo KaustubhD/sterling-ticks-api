@@ -2,6 +2,8 @@ package org.ibm.sterling_ticks.services.impl;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.ibm.sterling_ticks.model.entities.BrandModel;
 import org.ibm.sterling_ticks.model.entities.CollectionModel;
 import org.ibm.sterling_ticks.model.entities.ProductListModel;
@@ -13,6 +15,8 @@ import org.ibm.sterling_ticks.repositories.ProductRepository;
 import org.ibm.sterling_ticks.services.ProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,7 +29,11 @@ public class ProductServiceImpl implements ProductService {
 	@Autowired
 	private CollectionRepository collectionRepo;
 	@Autowired
-	private ModelMapper mapper; 
+	private ModelMapper mapper;
+	
+	private Pageable first4Products = PageRequest.of(0, 4);
+	private static final float MAX_RATING = 5;
+	private static final float MIN_RATING = 0;
 	
 	@Override
 	public boolean addProduct(ProductDto dto) {
@@ -50,6 +58,26 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List<ProductListModel> getPartialWatches() {
 		return repo.findAllBy();
+	}
+	
+	@Override
+	@Transactional
+	public boolean deleteProduct(String modelNo) {
+		return repo.deleteByModelNo(modelNo) > 0;
+	}
+	
+	@Override
+	public ProductModel getAllWatchByModel(String modelNo) {
+		return repo.findByModelNo(modelNo);
+	}
+	
+	@Override
+	public List<ProductModel> getSimilarProducts(String modelNo) {
+		float rating = repo.getRating(modelNo);
+		float upperLimit = Math.min(MAX_RATING, rating + 1);
+		float lowerLimit = Math.max(MIN_RATING, rating - 1);
+		
+		return repo.findByStarRatingBetweenOrderByStarRatingDesc(lowerLimit, upperLimit, first4Products);
 	}
 	
 	private BrandModel getOrSaveBrand(BrandModel brand) {

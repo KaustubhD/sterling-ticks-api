@@ -53,7 +53,7 @@ public class ProductModel {
 	private Gender gender;
 	
 	@Column(name = "star_rating")
-	private int starRating;
+	private float starRating;
 	
 	private int discount;
 
@@ -150,11 +150,11 @@ public class ProductModel {
 		this.gender = gender;
 	}
 
-	public int getStarRating() {
+	public float getStarRating() {
 		return starRating;
 	}
 
-	public void setStarRating(int starRating) {
+	public void setStarRating(float starRating) {
 		this.starRating = starRating;
 	}
 

@@ -14,7 +14,7 @@ public class ProductDto {
 	public String modelNo;
 	public String movement;
 	public Gender gender;
-	public int starRating;
+	public float starRating;
 	public int discount;
 	public String strapMaterial;
 	public String strapColor;

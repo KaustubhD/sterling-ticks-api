@@ -10,4 +10,7 @@ public interface ProductService {
 	public boolean addProduct(ProductDto product);
 	public List<ProductModel> getAllWatches();
 	public List<ProductListModel> getPartialWatches();
+	public ProductModel getAllWatchByModel(String modelNo);	
+	public boolean deleteProduct(String modelNo);
+	public List<ProductModel> getSimilarProducts(String modelNo);
 }
