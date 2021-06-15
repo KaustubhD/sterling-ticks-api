@@ -24,5 +24,5 @@ public interface ProductRepository extends JpaRepository<ProductModel, Integer>,
 	@Query("SELECT w.starRating FROM ProductModel w WHERE w.modelNo = :modelNo")
 	public float getRating(@Param("modelNo") String modelNo);
 	
-	public List<ProductModel> findByStarRatingBetweenOrderByStarRatingDesc(float lower, float higher, Pageable pager);
+	public List<ProductModel> findByModelNoNotAndStarRatingBetweenOrderByStarRatingDesc(String modelNo, float lower, float higher, Pageable pager);
 }

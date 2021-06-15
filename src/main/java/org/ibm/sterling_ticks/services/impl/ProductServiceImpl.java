@@ -81,7 +81,7 @@ public class ProductServiceImpl implements ProductService {
 		float upperLimit = Math.min(MAX_RATING, rating + 1);
 		float lowerLimit = Math.max(MIN_RATING, rating - 1);
 		
-		return repo.findByStarRatingBetweenOrderByStarRatingDesc(lowerLimit, upperLimit, first4Products);
+		return repo.findByModelNoNotAndStarRatingBetweenOrderByStarRatingDesc(modelNo, lowerLimit, upperLimit, first4Products);
 	}
 	
 	private BrandModel getOrSaveBrand(BrandModel brand) {

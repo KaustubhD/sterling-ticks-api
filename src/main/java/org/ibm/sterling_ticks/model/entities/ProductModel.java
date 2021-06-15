@@ -4,9 +4,12 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -56,18 +59,21 @@ public class ProductModel {
 	private float starRating;
 	
 	private int discount;
-
-	@Column(name="strap_material")
-	private String strapMaterial;
 	
-	@Column(name="strap_color")
-	private String strapColor;
+	@Embedded
+	@AttributeOverrides({
+		@AttributeOverride(name = "material", column = @Column(name = "strap_material")),
+		@AttributeOverride(name = "color", column = @Column(name = "strap_color"))
+    })
+	private Strap strap;
 	
-	@Column(name="case_size")
-	private int caseSize;
-	
-	@Column(name="case_shape")
-	private String caseShape;
+	@Embedded
+	@AttributeOverrides({
+		@AttributeOverride(name = "shape", column = @Column(name = "case_shape")),
+		@AttributeOverride(name = "color", column = @Column(name = "case_color")),
+		@AttributeOverride(name = "size", column = @Column(name = "case_size")),
+	})
+	private Casing casing;
 	
 	private String glassMaterial;
 	
@@ -76,6 +82,10 @@ public class ProductModel {
 	private int waterResistance;
 	
 	private int warrantyPeriod;
+	
+	@ElementCollection
+	@CollectionTable(name = "product_features", joinColumns = @JoinColumn(name = "id"))
+	private Set<String> features = new HashSet<>();
 	
 	@ElementCollection
 	@CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "id"))
@@ -166,36 +176,20 @@ public class ProductModel {
 		this.discount = discount;
 	}
 
-	public String getStrapMaterial() {
-		return strapMaterial;
+	public Strap getStrap() {
+		return strap;
 	}
 
-	public void setStrapMaterial(String strapMaterial) {
-		this.strapMaterial = strapMaterial;
+	public void setStrap(Strap strap) {
+		this.strap = strap;
 	}
 
-	public String getStrapColor() {
-		return strapColor;
+	public Casing getCasing() {
+		return casing;
 	}
 
-	public void setStrapColor(String strapColor) {
-		this.strapColor = strapColor;
-	}
-
-	public int getCaseSize() {
-		return caseSize;
-	}
-
-	public void setCaseSize(int caseSize) {
-		this.caseSize = caseSize;
-	}
-
-	public String getCaseShape() {
-		return caseShape;
-	}
-
-	public void setCaseShape(String caseShape) {
-		this.caseShape = caseShape;
+	public void setCasing(Casing casing) {
+		this.casing = casing;
 	}
 
 	public String getGlassMaterial() {
@@ -228,6 +222,14 @@ public class ProductModel {
 
 	public void setWarrantyPeriod(int warrantyPeriod) {
 		this.warrantyPeriod = warrantyPeriod;
+	}
+
+	public Set<String> getFeatures() {
+		return features;
+	}
+
+	public void setFeatures(Set<String> features) {
+		this.features = features;
 	}
 
 	public Set<String> getImages() {
