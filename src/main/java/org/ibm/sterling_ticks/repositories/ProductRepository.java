@@ -6,12 +6,13 @@ import org.ibm.sterling_ticks.model.entities.ProductListModel;
 import org.ibm.sterling_ticks.model.entities.ProductModel;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProductRepository extends JpaRepository<ProductModel, Integer>{
+public interface ProductRepository extends JpaRepository<ProductModel, Integer>, JpaSpecificationExecutor<ProductModel>{
 	public List<ProductModel> findAll();
 	
 	public List<ProductListModel> findAllBy();

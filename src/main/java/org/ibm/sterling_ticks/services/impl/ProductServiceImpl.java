@@ -1,7 +1,7 @@
 package org.ibm.sterling_ticks.services.impl;
 
 import java.util.List;
-
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.ibm.sterling_ticks.model.entities.BrandModel;
@@ -9,6 +9,7 @@ import org.ibm.sterling_ticks.model.entities.CollectionModel;
 import org.ibm.sterling_ticks.model.entities.ProductListModel;
 import org.ibm.sterling_ticks.model.entities.ProductModel;
 import org.ibm.sterling_ticks.model.entities.dto.ProductDto;
+import org.ibm.sterling_ticks.model.request.ProductParams;
 import org.ibm.sterling_ticks.repositories.BrandRepository;
 import org.ibm.sterling_ticks.repositories.CollectionRepository;
 import org.ibm.sterling_ticks.repositories.ProductRepository;
@@ -17,6 +18,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -56,8 +58,10 @@ public class ProductServiceImpl implements ProductService {
 	}
 	
 	@Override
-	public List<ProductListModel> getPartialWatches() {
-		return repo.findAllBy();
+	public List<ProductListModel> getPartialWatches(ProductParams query) {
+		List<ProductModel> watches = repo.findAll(filterByBrandAndCollection(query.getBrandName(), query.getCollectionName()));
+		return watches.stream().map(product -> mapper.map(product, ProductListModel.class))
+		  .collect(Collectors.toList());
 	}
 	
 	@Override
@@ -94,5 +98,17 @@ public class ProductServiceImpl implements ProductService {
 			saved = collectionRepo.save(collection);
 		}
 		return saved;
+	}
+	
+	private Specification<ProductModel> filterByBrandName(String brandName){
+		  return (root, query, criteriaBuilder)-> criteriaBuilder.equal(root.join("brand").get("name"), brandName);
+	}
+	private Specification<ProductModel> filterByCollectionName(String collectionName){
+		return (root, query, criteriaBuilder)-> criteriaBuilder.equal(root.join("collection").get("name"), collectionName);
+	}
+	private Specification<ProductModel> filterByBrandAndCollection(String brandName, String collectionName) {
+		return Specification
+				.where(brandName == null ? null : filterByBrandName(brandName))
+				.and(collectionName == null ? null : filterByCollectionName(collectionName));
 	}
 }

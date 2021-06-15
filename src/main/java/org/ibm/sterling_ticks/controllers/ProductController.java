@@ -5,6 +5,7 @@ import java.util.List;
 import org.ibm.sterling_ticks.model.entities.ProductListModel;
 import org.ibm.sterling_ticks.model.entities.ProductModel;
 import org.ibm.sterling_ticks.model.entities.dto.ProductDto;
+import org.ibm.sterling_ticks.model.request.ProductParams;
 import org.ibm.sterling_ticks.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -40,7 +41,7 @@ public class ProductController {
 	}
 	
 	@GetMapping(value = "{modelNo}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getProducts(@PathVariable String modelNo) {
+	public ResponseEntity<?> getProduct(@PathVariable String modelNo) {
 		ProductModel watch = productService.getAllWatchByModel(modelNo);
 		return ResponseEntity.ok(watch);
 	}
@@ -52,8 +53,8 @@ public class ProductController {
 	}
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getPartialProducts() {
-		List<ProductListModel> watches = productService.getPartialWatches();
+	public ResponseEntity<?> getPartialProducts(ProductParams query) {
+		List<ProductListModel> watches = productService.getPartialWatches(query);
 		return ResponseEntity.ok(watches);
 	}
 	
