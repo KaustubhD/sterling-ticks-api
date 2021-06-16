@@ -8,6 +8,7 @@ import org.ibm.sterling_ticks.model.entities.dto.ProductDto;
 import org.ibm.sterling_ticks.model.request.ProductParams;
 import org.ibm.sterling_ticks.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -62,5 +64,16 @@ public class ProductController {
 	public ResponseEntity<?> deleteProduct(@PathVariable String modelNo) {
 		boolean isDeleted = productService.deleteProduct(modelNo);
 		return ResponseEntity.ok(new Object() {public boolean result = isDeleted;});
+	}
+	
+	@PutMapping(value = "edit", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> updateProduct(@RequestBody ProductDto dto) {
+		try {
+			boolean isUpdated = productService.updateProduct(dto);
+			return ResponseEntity.ok(new Object() {public boolean result = isUpdated;});
+		}
+		catch(DataIntegrityViolationException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
 	}
 }

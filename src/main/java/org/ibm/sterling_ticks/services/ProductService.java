@@ -14,4 +14,5 @@ public interface ProductService {
 	public ProductModel getAllWatchByModel(String modelNo);	
 	public boolean deleteProduct(String modelNo);
 	public List<ProductModel> getSimilarProducts(String modelNo);
+	public boolean updateProduct(ProductDto dto);
 }

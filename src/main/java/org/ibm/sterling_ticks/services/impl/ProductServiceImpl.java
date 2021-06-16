@@ -1,6 +1,7 @@
 package org.ibm.sterling_ticks.services.impl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
@@ -84,6 +85,18 @@ public class ProductServiceImpl implements ProductService {
 		return repo.findByModelNoNotAndStarRatingBetweenOrderByStarRatingDesc(modelNo, lowerLimit, upperLimit, first4Products);
 	}
 	
+	@Override
+	public boolean updateProduct(ProductDto dto) {
+		Optional<ProductModel> ref = repo.findById(dto.productId);
+		if(ref.isPresent()) {
+			ProductModel original = ref.get();
+			mapper.map(dto, original);
+			repo.save(original);
+			return true;
+		}
+		return false;
+	}
+	
 	private BrandModel getOrSaveBrand(BrandModel brand) {
 		BrandModel saved = brandRepo.findByName(brand.getName());
 		if(saved == null) {
@@ -103,9 +116,11 @@ public class ProductServiceImpl implements ProductService {
 	private Specification<ProductModel> filterByBrandName(String brandName){
 		  return (root, query, criteriaBuilder)-> criteriaBuilder.equal(root.join("brand").get("name"), brandName);
 	}
+	
 	private Specification<ProductModel> filterByCollectionName(String collectionName){
 		return (root, query, criteriaBuilder)-> criteriaBuilder.equal(root.join("collection").get("name"), collectionName);
 	}
+	
 	private Specification<ProductModel> filterByBrandAndCollection(String brandName, String collectionName) {
 		return Specification
 				.where(brandName == null ? null : filterByBrandName(brandName))

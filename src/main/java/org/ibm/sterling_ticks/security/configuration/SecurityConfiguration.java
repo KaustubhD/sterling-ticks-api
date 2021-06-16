@@ -2,6 +2,7 @@
 package org.ibm.sterling_ticks.security.configuration;
 
 import org.ibm.sterling_ticks.services.DatabaseUserDetailsService;
+import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.config.Configuration.AccessLevel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   public ModelMapper modelMapper() {
 	  ModelMapper mapper = new ModelMapper();
 	  mapper.getConfiguration()
+	  	.setPropertyCondition(Conditions.isNotNull())
 	  	.setFieldMatchingEnabled(true)
 	  	.setFieldAccessLevel(AccessLevel.PRIVATE);
 	  return mapper;
