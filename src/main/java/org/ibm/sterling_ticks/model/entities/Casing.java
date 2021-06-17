@@ -6,7 +6,8 @@ import javax.persistence.Embeddable;
 public class Casing {
 	private String color;
 	private String shape;
-	private String size;
+	private Float size;
+	private String material;
 	
 	public String getColor() {
 		return color;
@@ -20,10 +21,16 @@ public class Casing {
 	public void setShape(String shape) {
 		this.shape = shape;
 	}
-	public String getSize() {
+	public Float getSize() {
 		return size;
 	}
-	public void setSize(String size) {
+	public void setSize(Float size) {
 		this.size = size;
+	}
+	public String getMaterial() {
+		return material;
+	}
+	public void setMaterial(String material) {
+		this.material = material;
 	}
 }

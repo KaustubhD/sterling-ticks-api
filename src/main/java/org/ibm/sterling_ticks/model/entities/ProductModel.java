@@ -22,6 +22,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.ibm.sterling_ticks.model.entities.enumerations.DeliverySpeed;
 import org.ibm.sterling_ticks.model.entities.enumerations.Gender;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -36,7 +37,7 @@ public class ProductModel {
 	@JsonIgnore
 	private int productId;
 	
-	@Column(name = "name", length = 30, nullable = false, unique = true)
+	@Column(name = "name", length = 30, nullable = false)
 	private String name;
 	
 	@Column(name = "price", nullable = false)
@@ -55,6 +56,10 @@ public class ProductModel {
 	@Column(nullable = false)
 	private Gender gender;
 	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "delivery_speed", nullable = false)
+	private DeliverySpeed deliverySpeed;
+	
 	@Column(name = "star_rating")
 	private float starRating;
 	
@@ -72,6 +77,7 @@ public class ProductModel {
 		@AttributeOverride(name = "shape", column = @Column(name = "case_shape")),
 		@AttributeOverride(name = "color", column = @Column(name = "case_color")),
 		@AttributeOverride(name = "size", column = @Column(name = "case_size")),
+		@AttributeOverride(name = "material", column = @Column(name = "case_material")),
 	})
 	private Casing casing;
 	
