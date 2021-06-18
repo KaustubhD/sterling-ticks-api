@@ -43,14 +43,14 @@ public class OtpServiceImpl implements OtpService {
 	
 	@Override
 	public boolean generateOtp(OtpDto dto) {
-		if (dto.username.isBlank()) {
+		if (dto.username.isEmpty()) {
 			throw new InvalidDataException("No username supplied");
 		}
-		if (!dto.email.isBlank()) {
+		if (!dto.email.isEmpty()) {
 			int otp = generateOtp(dto.username);
 			mailService.sendOtpMail(dto.email, otp);
 		}
-		else if (!dto.phone.isBlank()) {
+		else if (!dto.phone.isEmpty()) {
 			int otp = generateOtp(dto.username);
 			smsService.sendMessage(dto.phone, otp);
 		}
@@ -62,7 +62,7 @@ public class OtpServiceImpl implements OtpService {
 
 	@Override
 	public boolean validateOtp(OtpDto dto) {
-		if (dto.username.isBlank() || dto.value < 1) {
+		if (dto.username.isEmpty() || dto.value < 1) {
 			throw new InvalidDataException("Missing values");
 		}
 		int otp;

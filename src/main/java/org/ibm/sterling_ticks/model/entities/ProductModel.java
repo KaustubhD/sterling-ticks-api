@@ -25,8 +25,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.ibm.sterling_ticks.model.entities.enumerations.DeliverySpeed;
 import org.ibm.sterling_ticks.model.entities.enumerations.Gender;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @Table(name = "product")
 public class ProductModel {
@@ -34,7 +32,6 @@ public class ProductModel {
 	@Id
 	@GeneratedValue
 	@Column(name = "id")
-	@JsonIgnore
 	private int productId;
 	
 	@Column(name = "name", length = 30, nullable = false)
@@ -54,11 +51,11 @@ public class ProductModel {
 	
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private Gender gender;
+	private Gender gender = Gender.unisex;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "delivery_speed", nullable = false)
-	private DeliverySpeed deliverySpeed;
+	private DeliverySpeed deliverySpeed = DeliverySpeed.slow;
 	
 	@Column(name = "star_rating")
 	private float starRating;
