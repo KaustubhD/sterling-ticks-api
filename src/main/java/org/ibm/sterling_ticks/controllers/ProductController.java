@@ -7,6 +7,7 @@ import org.ibm.sterling_ticks.model.entities.ProductModel;
 import org.ibm.sterling_ticks.model.entities.dto.ProductDto;
 import org.ibm.sterling_ticks.model.request.ProductParams;
 import org.ibm.sterling_ticks.services.ProductService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
@@ -29,6 +30,8 @@ public class ProductController {
 
 	@Autowired
 	private ProductService productService;
+	@Autowired
+	private ModelMapper mapper;
 	
 	@PostMapping(value = "add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> addProduct(@RequestBody ProductDto product) {
@@ -45,7 +48,8 @@ public class ProductController {
 	@GetMapping(value = "{modelNo}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getProduct(@PathVariable String modelNo) {
 		ProductModel watch = productService.getAllWatchByModel(modelNo);
-		return ResponseEntity.ok(watch);
+		ProductDto response = mapper.map(watch, ProductDto.class);
+		return ResponseEntity.ok(response);
 	}
 	
 	@GetMapping(value = "similarProducts", produces = MediaType.APPLICATION_JSON_VALUE)

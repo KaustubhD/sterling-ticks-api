@@ -15,6 +15,7 @@ import org.ibm.sterling_ticks.repositories.BrandRepository;
 import org.ibm.sterling_ticks.repositories.CollectionRepository;
 import org.ibm.sterling_ticks.repositories.ProductRepository;
 import org.ibm.sterling_ticks.services.ProductService;
+import org.ibm.sterling_ticks.services.common.HelpService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -23,7 +24,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProductServiceImpl implements ProductService {
+public class ProductServiceImpl extends HelpService implements ProductService {
 
 	@Autowired
 	private ProductRepository repo;
@@ -87,7 +88,7 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Override
 	public boolean updateProduct(ProductDto dto) {
-		Optional<ProductModel> ref = repo.findById(dto.productId);
+		Optional<ProductModel> ref = repo.findById(dto.id);
 		if(ref.isPresent()) {
 			ProductModel original = ref.get();
 			mapper.map(dto, original);
