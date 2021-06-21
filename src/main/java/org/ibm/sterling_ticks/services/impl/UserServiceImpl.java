@@ -62,10 +62,10 @@ public class UserServiceImpl implements UserService {
 	}
 	private AddressModel editOrCreateAddress(UserModel user, AddressDto dto) {
 		AddressModel addEntity = null;
-		if(dto.addressId != null && dto.addressId > 0) {
+		if(dto.id != null && dto.id > 0) {
 			addEntity = user.getSavedAddresses()
 							.stream()
-							.filter(add -> add.getAddressId() == dto.addressId)
+							.filter(add -> add.getAddressId() == dto.id)
 							.findFirst()
 							.orElse(null);
 		}

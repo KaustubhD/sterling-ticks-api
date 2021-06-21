@@ -44,8 +44,11 @@ public class AddressModel {
 	
 	private String country;
 	
-	@Column(length = 6)
-	private int pin;
+	@Column(name = "pin", length = 6)
+	private Integer pincode;
+	
+	@Column(length = 10)
+	private String phoneNo;
 
 	public Integer getAddressId() {
 		return addressId;
@@ -119,11 +122,19 @@ public class AddressModel {
 		this.country = country;
 	}
 
-	public int getPin() {
-		return pin;
+	public int getPincode() {
+		return pincode;
 	}
 
-	public void setPin(int pin) {
-		this.pin = pin;
+	public void setPincode(Integer pin) {
+		this.pincode = pin;
+	}
+
+	public String getPhoneNo() {
+		return phoneNo;
+	}
+
+	public void setPhoneNo(String phone) {
+		this.phoneNo = phone;
 	}
 }
