@@ -27,6 +27,10 @@ public class OrderItemModel {
 	private ProductModel product;
 	
 	private Integer quantity;
+	
+	private Integer boughtAtPrice;
+	
+	private Float boughtAtDiscount;
 
 	public Integer getOrderItemId() {
 		return orderItemId;
@@ -58,5 +62,21 @@ public class OrderItemModel {
 
 	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
+	}
+
+	public Integer getBoughtAtPrice() {
+		return boughtAtPrice;
+	}
+
+	public void setBoughtAtPrice(Integer boughtAtPrice) {
+		this.boughtAtPrice = boughtAtPrice;
+	}
+
+	public Float getBoughtAtDiscount() {
+		return boughtAtDiscount;
+	}
+
+	public void setBoughtAtDiscount(Float boughtAtDiscount) {
+		this.boughtAtDiscount = boughtAtDiscount;
 	}
 }
