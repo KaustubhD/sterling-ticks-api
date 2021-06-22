@@ -10,4 +10,5 @@ public interface UserService {
 	public List<AddressDto> getUserAddresses(String userName);
 	public boolean saveAddress(AddressDto dto, String userName);
 	public boolean deleteUserAddress(String userName, Integer addressId);
+	public boolean assignAdmin(String username);
 }

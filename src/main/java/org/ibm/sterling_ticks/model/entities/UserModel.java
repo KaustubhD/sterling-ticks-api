@@ -68,6 +68,9 @@ public class UserModel {
 	
 	@OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
 	private Set<AddressModel> savedAddresses = new HashSet<>();
+	
+	@OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
+	private Set<PaymentMethodModel> savedPaymentMethods = new HashSet<>();
 
 	public int getId() {
 		return id;
@@ -130,6 +133,14 @@ public class UserModel {
 
 	public void setSavedAddresses(Set<AddressModel> savedAddresses) {
 		this.savedAddresses = savedAddresses;
+	}
+
+	public Set<PaymentMethodModel> getSavedPaymentMethods() {
+		return savedPaymentMethods;
+	}
+
+	public void setSavedPaymentMethods(Set<PaymentMethodModel> savedPaymentMethods) {
+		this.savedPaymentMethods = savedPaymentMethods;
 	}
 }
 	
