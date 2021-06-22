@@ -61,9 +61,9 @@ public class UserController {
 	
 	@PostMapping(value = "{userName}/cards", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> saveCard(@PathVariable String userName, @RequestBody PaymentMethodDto dto) {
-		boolean response = paymentMethodService.saveCard(userName, dto);
+		Integer savedId = paymentMethodService.saveCard(userName, dto);
 		
-		return ResponseEntity.ok(new Object() {public boolean result = response;});
+		return ResponseEntity.ok(new Object() {public Integer id = savedId;});
 	}
 	
 	@DeleteMapping(value = "{userName}/cards/{cardId}", produces = MediaType.APPLICATION_JSON_VALUE)
