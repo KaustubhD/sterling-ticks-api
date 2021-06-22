@@ -6,10 +6,12 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -43,7 +45,7 @@ public class UserModel {
 	@Column(name="email", unique = true, nullable = false)
 	private String email;
 	
-	@Column(name = "date_created", nullable = false)
+	@Column(name = "date_created", nullable = false, updatable = false)
 	@CreationTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateCreated;
@@ -63,6 +65,23 @@ public class UserModel {
 
 	@Column(length=20)
 	private String phoneNo;
+	
+	@Column
+	private String userImage;
+	
+	public String getImage() {
+		return userImage;
+	}
+
+	public void setImage(String image) {
+		this.userImage = image;
+	}
+
+	@OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
+	private Set<AddressModel> savedAddresses = new HashSet<>();
+	
+	@OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
+	private Set<PaymentMethodModel> savedPaymentMethods = new HashSet<>();
 
 	public int getId() {
 		return id;
@@ -117,6 +136,22 @@ public class UserModel {
 
 	public void setRoles(Set<RoleModel> roles) {
 		this.roles = roles;
+	}
+
+	public Set<AddressModel> getSavedAddresses() {
+		return savedAddresses;
+	}
+
+	public void setSavedAddresses(Set<AddressModel> savedAddresses) {
+		this.savedAddresses = savedAddresses;
+	}
+
+	public Set<PaymentMethodModel> getSavedPaymentMethods() {
+		return savedPaymentMethods;
+	}
+
+	public void setSavedPaymentMethods(Set<PaymentMethodModel> savedPaymentMethods) {
+		this.savedPaymentMethods = savedPaymentMethods;
 	}
 }
 	

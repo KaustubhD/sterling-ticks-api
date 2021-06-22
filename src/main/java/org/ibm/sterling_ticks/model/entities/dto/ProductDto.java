@@ -10,8 +10,11 @@ import org.ibm.sterling_ticks.model.entities.Strap;
 import org.ibm.sterling_ticks.model.entities.enumerations.DeliverySpeed;
 import org.ibm.sterling_ticks.model.entities.enumerations.Gender;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 public class ProductDto {
-	public Integer productId;
+	public Integer id;
 	public String name;
 	public Integer price;
 	public String series;
@@ -31,4 +34,7 @@ public class ProductDto {
 	public Set<String> images = new HashSet<>();
 	public BrandModel brand;
 	public CollectionModel collection;
+	
+	@JsonInclude(Include.NON_NULL)
+	public Integer quantity;
 }

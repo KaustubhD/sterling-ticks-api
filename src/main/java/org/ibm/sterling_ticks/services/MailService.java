@@ -52,4 +52,15 @@ public class MailService {
 			throw new RuntimeException(e);
 		} 
 	}
+	public boolean sendOrderSuccessMail(String email, Float amount) {
+		try {
+			EmailTemplate template = FileUtil.readOrderSuccessEmailTemplate();
+			template.body = String.format(template.body, (amount > 0 ? "of amount " + amount.toString() : ""));
+			
+			return sendMail(email, template.subject, template.body);			
+		}
+		catch(IOException e) {
+			throw new RuntimeException(e);
+		} 
+	}
 }
