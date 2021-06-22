@@ -6,10 +6,13 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.ibm.sterling_ticks.model.entities.AddressModel;
+import org.ibm.sterling_ticks.model.entities.RoleModel;
 import org.ibm.sterling_ticks.model.entities.UserModel;
 import org.ibm.sterling_ticks.model.entities.dto.AddressDto;
 import org.ibm.sterling_ticks.model.entities.dto.UserProfileDto;
+import org.ibm.sterling_ticks.model.entities.enumerations.Roles;
 import org.ibm.sterling_ticks.repositories.AddressRepository;
+import org.ibm.sterling_ticks.repositories.RoleRepository;
 import org.ibm.sterling_ticks.repositories.UserRepository;
 import org.ibm.sterling_ticks.services.UserService;
 import org.modelmapper.ModelMapper;
@@ -23,6 +26,8 @@ public class UserServiceImpl implements UserService {
 	private UserRepository userRepo;
 	@Autowired
 	private AddressRepository addressRepo;
+	@Autowired
+	private RoleRepository roleRepo;
 	@Autowired
 	private ModelMapper mapper;
 	
@@ -60,6 +65,18 @@ public class UserServiceImpl implements UserService {
 		unlinkAddressToUser(userEntity, address);
 		return true;
 	}
+	
+	@Override
+	public boolean assignAdmin(String userName) {
+		UserModel userEntity = userRepo.findByUserName(userName);
+		RoleModel adminRole = getAdminRole();
+		if(adminRole == null) {
+			return false;
+		}
+		userEntity.getRoles().add(adminRole);
+		return true;
+	}
+
 	private AddressModel editOrCreateAddress(UserModel user, AddressDto dto) {
 		AddressModel addEntity = null;
 		if(dto.id != null && dto.id > 0) {
@@ -83,15 +100,20 @@ public class UserServiceImpl implements UserService {
 	private void setAllAddressNotDefault(UserModel user) {
 		user.getSavedAddresses().stream().forEach(add -> add.setDefault(false));
 	}
+	
 	private void linkAddressToUser(UserModel user, AddressModel address) {
 		user.getSavedAddresses().add(address);
 		userRepo.save(user);
 		address.setUser(user);
 	}
+	
 	private void unlinkAddressToUser(UserModel user, AddressModel address) {
 		user.getSavedAddresses().remove(address);
 		address.setUser(null);
 	}
-
+	
+	private RoleModel getAdminRole() {
+		return roleRepo.findByRole(Roles.AD.toString());
+	}
 
 }

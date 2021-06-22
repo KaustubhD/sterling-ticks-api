@@ -1,18 +1,30 @@
 package org.ibm.sterling_ticks.services.impl;
 
-import java.awt.datatransfer.SystemFlavorMap;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import javax.transaction.Transactional;
 
+import org.ibm.sterling_ticks.model.entities.AddressModel;
 import org.ibm.sterling_ticks.model.entities.OrderItemModel;
 import org.ibm.sterling_ticks.model.entities.OrderModel;
+import org.ibm.sterling_ticks.model.entities.PaymentMethodModel;
 import org.ibm.sterling_ticks.model.entities.ProductModel;
+import org.ibm.sterling_ticks.model.entities.TransactionModel;
 import org.ibm.sterling_ticks.model.entities.UserModel;
 import org.ibm.sterling_ticks.model.entities.dto.CartDto;
 import org.ibm.sterling_ticks.model.entities.dto.CartRequestDto;
+import org.ibm.sterling_ticks.model.entities.dto.CartVoucherDto;
+import org.ibm.sterling_ticks.model.entities.dto.OrderDto;
+import org.ibm.sterling_ticks.model.entities.dto.OrderPlaceDto;
 import org.ibm.sterling_ticks.model.entities.enumerations.Status;
+import org.ibm.sterling_ticks.repositories.AddressRepository;
 import org.ibm.sterling_ticks.repositories.OrderRepository;
+import org.ibm.sterling_ticks.repositories.PaymentMethodRepository;
 import org.ibm.sterling_ticks.repositories.ProductRepository;
+import org.ibm.sterling_ticks.repositories.TransactionRepository;
 import org.ibm.sterling_ticks.repositories.UserRepository;
 import org.ibm.sterling_ticks.services.OrderService;
 import org.ibm.sterling_ticks.services.common.HelpService;
@@ -29,6 +41,12 @@ public class OrderServiceImpl extends HelpService implements OrderService {
 	private UserRepository userRepo;
 	@Autowired
 	private ProductRepository productRepo;
+	@Autowired
+	private AddressRepository addressRepo;	
+	@Autowired
+	private TransactionRepository transactionRepo;
+	@Autowired
+	private PaymentMethodRepository methodRepo;
 	@Autowired
 	private ModelMapper mapper;
 	
@@ -67,6 +85,45 @@ public class OrderServiceImpl extends HelpService implements OrderService {
 		return (orderItem != null) ? orderItem.getQuantity() : 0;
 	}
 	
+	@Override
+	public boolean addVoucherToCart(CartVoucherDto dto) {
+		OrderModel order = repo.findCartByUserName(dto.userName);
+		if(order == null) {
+			return false;
+		}
+		order.setVoucherDiscount(dto.voucherDiscount);
+		repo.save(order);
+		return true;
+	}
+	
+	@Override
+	@Transactional
+	public boolean placeOrder(OrderPlaceDto dto) {
+		OrderModel order = repo.findCartByUserName(dto.userName);
+		AddressModel address = addressRepo.findById(dto.addressId).orElse(null);
+		PaymentMethodModel paymentMethod = methodRepo.findById(dto.transaction.paymentMethodId).orElse(null);
+		if(order == null || address == null || paymentMethod == null) {
+			return false;
+		}
+		TransactionModel transaction = new TransactionModel();
+		transaction = transactionRepo.save(transaction);
+		transaction.setOrder(order);
+		transaction.setPaymentMethod(paymentMethod);
+		transaction.setPrice(dto.transaction.amount);
+		order.setOrderStatus(Status.PLACED);
+		order.setPlacedAt(new Date());
+		order.setAddress(address);
+		order.setTransactions(transaction);
+		
+		return true;
+	}
+	
+	@Override
+	public List<OrderDto> getAllOrders(String userName) {
+		List<OrderModel> orders = repo.findAllPreviousOrders(userName);
+		List<OrderDto> response = orders.stream().map(ord -> mapper.map(ord, OrderDto.class)).collect(Collectors.toList());
+		return response;
+	}
 	private OrderModel createCartOrder(CartRequestDto dto) {
 		UserModel user = userRepo.findByUserName(dto.userName);
 		OrderModel order = new OrderModel();
@@ -88,6 +145,8 @@ public class OrderServiceImpl extends HelpService implements OrderService {
 			linkCartWithCartItem(order, cartItem);
 		}
 		cartItem.setQuantity(quantity);
+		cartItem.setBoughtAtDiscount((float)cartItem.getProduct().getDiscount());
+		cartItem.setBoughtAtPrice(cartItem.getProduct().getPrice());
 		return getNumOrderItems(order);
 	}
 	

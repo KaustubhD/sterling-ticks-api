@@ -1,6 +1,11 @@
 package org.ibm.sterling_ticks.controllers;
 
+import java.util.List;
+
 import org.ibm.sterling_ticks.model.entities.dto.CartRequestDto;
+import org.ibm.sterling_ticks.model.entities.dto.CartVoucherDto;
+import org.ibm.sterling_ticks.model.entities.dto.OrderDto;
+import org.ibm.sterling_ticks.model.entities.dto.OrderPlaceDto;
 import org.ibm.sterling_ticks.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -37,5 +42,24 @@ public class OrderController {
 	public ResponseEntity<?> getUserCartQuantity(@RequestParam String userName, @RequestParam String modelNo) {
 		Integer quantity = service.getQuantityInCart(userName, modelNo);
 		return ResponseEntity.ok(new Object() {public Integer quantityInCart = quantity;});
+	}
+	
+	@PostMapping(value = "cart/addVoucher", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> addVoucherToCart(@RequestBody CartVoucherDto dto) {
+		boolean response = service.addVoucherToCart(dto);
+		return ResponseEntity.ok(new Object() {public boolean result = response;});
+	}
+	
+	@PostMapping(value = "placeOrder", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> placeOrder(@RequestBody OrderPlaceDto dto) {
+		boolean response = service.placeOrder(dto);
+		return ResponseEntity.ok(new Object() {public boolean result = response;});
+
+	}
+	
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getOrderHistory(@RequestParam String userName) {
+		List<OrderDto> orders = service.getAllOrders(userName);
+		return ResponseEntity.ok(orders);
 	}
 }

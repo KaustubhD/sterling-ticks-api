@@ -1,9 +1,11 @@
 package org.ibm.sterling_ticks.controllers;
 
 import java.util.List;
-
+\
 import org.ibm.sterling_ticks.model.entities.dto.AddressDto;
+import org.ibm.sterling_ticks.model.entities.dto.PaymentMethodDto;
 import org.ibm.sterling_ticks.model.entities.dto.UserProfileDto;
+import org.ibm.sterling_ticks.services.PaymentMethodService;
 import org.ibm.sterling_ticks.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -24,6 +26,8 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private PaymentMethodService paymentMethodService;
 	
 	@GetMapping(value = "{userName}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getUserDetails(@PathVariable String userName) {
@@ -45,6 +49,32 @@ public class UserController {
 	@DeleteMapping(value = "{userName}/address/{addressId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> deleteUserAddress(@PathVariable String userName, @PathVariable Integer addressId) {
 		boolean response = userService.deleteUserAddress(userName, addressId);
+		return ResponseEntity.ok(new Object() {public boolean result = response;});
+	}
+	
+	@GetMapping(value = "{userName}/cards", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getSavedCards(@PathVariable String userName) {
+		List<PaymentMethodDto> methods = paymentMethodService.getSavedCards(userName);
+		
+		return ResponseEntity.ok(methods);
+	}
+	
+	@PostMapping(value = "{userName}/cards", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> saveCard(@PathVariable String userName, @RequestBody PaymentMethodDto dto) {
+		boolean response = paymentMethodService.saveCard(userName, dto);
+		
+		return ResponseEntity.ok(new Object() {public boolean result = response;});
+	}
+	
+	@DeleteMapping(value = "{userName}/cards/{cardId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> deleteCard(@PathVariable String userName, @PathVariable Integer cardId) {
+		boolean response = paymentMethodService.deleteCard(userName, cardId);
+		return ResponseEntity.ok(new Object() {public boolean result = response;});
+	}
+	
+	@PostMapping(value = "{userName}/assignAdmin", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> assignAdmin(@PathVariable String userName) {
+		boolean response = userService.assignAdmin(userName);
 		return ResponseEntity.ok(new Object() {public boolean result = response;});
 	}
 }
