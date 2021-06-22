@@ -1,7 +1,7 @@
 package org.ibm.sterling_ticks.controllers;
 
 import java.util.List;
-\
+
 import org.ibm.sterling_ticks.model.entities.dto.AddressDto;
 import org.ibm.sterling_ticks.model.entities.dto.PaymentMethodDto;
 import org.ibm.sterling_ticks.model.entities.dto.UserProfileDto;
@@ -61,9 +61,9 @@ public class UserController {
 	
 	@PostMapping(value = "{userName}/cards", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> saveCard(@PathVariable String userName, @RequestBody PaymentMethodDto dto) {
-		boolean response = paymentMethodService.saveCard(userName, dto);
+		Integer savedId = paymentMethodService.saveCard(userName, dto);
 		
-		return ResponseEntity.ok(new Object() {public boolean result = response;});
+		return ResponseEntity.ok(new Object() {public Integer id = savedId;});
 	}
 	
 	@DeleteMapping(value = "{userName}/cards/{cardId}", produces = MediaType.APPLICATION_JSON_VALUE)

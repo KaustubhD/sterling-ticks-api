@@ -38,10 +38,10 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
 
 	@Override
 	@Transactional
-	public boolean saveCard(String userName, PaymentMethodDto dto) {
+	public Integer saveCard(String userName, PaymentMethodDto dto) {
 		UserModel userEntity = userRepo.findByUserName(userName);
 		PaymentMethodModel addEntity = editOrCreateCard(userEntity, dto);
-		return true;
+		return addEntity.getPaymentMethodId();
 	}
 	
 	@Override

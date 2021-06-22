@@ -26,6 +26,7 @@ import org.ibm.sterling_ticks.repositories.PaymentMethodRepository;
 import org.ibm.sterling_ticks.repositories.ProductRepository;
 import org.ibm.sterling_ticks.repositories.TransactionRepository;
 import org.ibm.sterling_ticks.repositories.UserRepository;
+import org.ibm.sterling_ticks.services.MailService;
 import org.ibm.sterling_ticks.services.OrderService;
 import org.ibm.sterling_ticks.services.common.HelpService;
 import org.modelmapper.ModelMapper;
@@ -35,6 +36,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrderServiceImpl extends HelpService implements OrderService {
 
+	@Autowired
+	private MailService mailService;
 	@Autowired
 	private OrderRepository repo;
 	@Autowired
@@ -105,16 +108,12 @@ public class OrderServiceImpl extends HelpService implements OrderService {
 		if(order == null || address == null || paymentMethod == null) {
 			return false;
 		}
-		TransactionModel transaction = new TransactionModel();
-		transaction = transactionRepo.save(transaction);
-		transaction.setOrder(order);
-		transaction.setPaymentMethod(paymentMethod);
-		transaction.setPrice(dto.transaction.amount);
+		TransactionModel transaction = getNewTransaction(paymentMethod, dto.transaction.amount);
+		linkOrderWithTransaction(order, transaction);
 		order.setOrderStatus(Status.PLACED);
 		order.setPlacedAt(new Date());
 		order.setAddress(address);
-		order.setTransactions(transaction);
-		
+		mailService.sendOrderSuccessMail(order.getUser().getEmail(), order.getTransactions().getPrice());
 		return true;
 	}
 	
@@ -168,5 +167,19 @@ public class OrderServiceImpl extends HelpService implements OrderService {
 	
 	private Integer getNumOrderItems(OrderModel order) {
 		return order.getOrderItems().stream().mapToInt((item) -> item.getQuantity()).sum();
+	}
+	
+	private TransactionModel getNewTransaction(PaymentMethodModel paymentMethod, Float amount) {
+		TransactionModel transaction = new TransactionModel();
+		transaction = transactionRepo.save(transaction);
+		transaction.setPaymentMethod(paymentMethod);
+		transaction.setPrice(amount);
+		
+		return transaction;
+	}
+	
+	private void linkOrderWithTransaction(OrderModel order, TransactionModel transaction) {
+		transaction.setOrder(order);
+		order.setTransactions(transaction);
 	}
 }
