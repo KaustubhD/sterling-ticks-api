@@ -66,6 +66,17 @@ public class UserModel {
 	@Column(length=20)
 	private String phoneNo;
 	
+	@Column
+	private String userImage;
+	
+	public String getImage() {
+		return userImage;
+	}
+
+	public void setImage(String image) {
+		this.userImage = image;
+	}
+
 	@OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
 	private Set<AddressModel> savedAddresses = new HashSet<>();
 

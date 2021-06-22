@@ -7,4 +7,5 @@ public class UserProfileDto {
 	public String email;
 	public Date dateCreated;
 	public String phoneNo;
+	public String userImage;
 }

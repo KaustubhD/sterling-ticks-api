@@ -12,12 +12,14 @@ public class UserDto {
 	public Date dateCreated;
 	public String phoneNo;
 	public Set<RoleModel> roles;
+	public String userImage;
 	
 	public UserDto(UserModel model) {
 		userName = model.getUserName();
 		email = model.getEmail();
 		dateCreated = model.getDateCreated();
 		phoneNo = model.getPhoneNo();
+		userImage = model.getImage();
 		roles = model.getRoles();
 	}
 }
