@@ -74,6 +74,7 @@ public class UserServiceImpl implements UserService {
 			return false;
 		}
 		userEntity.getRoles().add(adminRole);
+		userRepo.save(userEntity);
 		return true;
 	}
 
