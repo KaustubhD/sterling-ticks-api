@@ -52,8 +52,11 @@ public class OrderController {
 	
 	@PostMapping(value = "placeOrder", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> placeOrder(@RequestBody OrderPlaceDto dto) {
-		boolean response = service.placeOrder(dto);
-		return ResponseEntity.ok(new Object() {public boolean result = response;});
+		Integer orderId = service.placeOrder(dto);
+		return ResponseEntity.ok(new Object() {
+			public boolean result = orderId != null && orderId > 0;
+			public Integer id = orderId;
+		});
 
 	}
 	

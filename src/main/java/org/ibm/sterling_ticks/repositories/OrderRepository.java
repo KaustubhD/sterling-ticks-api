@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.ibm.sterling_ticks.model.entities.OrderItemModel;
 import org.ibm.sterling_ticks.model.entities.OrderModel;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,5 +19,5 @@ public interface OrderRepository extends JpaRepository<OrderModel, Integer>{
 	public OrderItemModel findOrderItemByProductId(@Param(value = "productId") Integer productId);
 	
 	@Query("SELECT o from OrderModel o WHERE o.user.userName = :username and o.orderStatus != org.ibm.sterling_ticks.model.entities.enumerations.Status.IN_CART")
-	public List<OrderModel> findAllPreviousOrders(@Param(value = "username") String userName);
+	public List<OrderModel> findAllPreviousOrders(@Param(value = "username") String userName, Sort sort);
 }

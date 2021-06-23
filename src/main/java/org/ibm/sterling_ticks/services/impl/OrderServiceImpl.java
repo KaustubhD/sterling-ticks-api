@@ -31,6 +31,7 @@ import org.ibm.sterling_ticks.services.OrderService;
 import org.ibm.sterling_ticks.services.common.HelpService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -101,12 +102,12 @@ public class OrderServiceImpl extends HelpService implements OrderService {
 	
 	@Override
 	@Transactional
-	public boolean placeOrder(OrderPlaceDto dto) {
+	public Integer placeOrder(OrderPlaceDto dto) {
 		OrderModel order = repo.findCartByUserName(dto.userName);
 		AddressModel address = addressRepo.findById(dto.addressId).orElse(null);
 		PaymentMethodModel paymentMethod = methodRepo.findById(dto.transaction.paymentMethodId).orElse(null);
 		if(order == null || address == null || paymentMethod == null) {
-			return false;
+			return null;
 		}
 		TransactionModel transaction = getNewTransaction(paymentMethod, dto.transaction.amount);
 		linkOrderWithTransaction(order, transaction);
@@ -114,12 +115,13 @@ public class OrderServiceImpl extends HelpService implements OrderService {
 		order.setPlacedAt(new Date());
 		order.setAddress(address);
 		mailService.sendOrderSuccessMail(order.getUser().getEmail(), order.getTransactions().getPrice());
-		return true;
+		return order.getOrderId();
 	}
 	
 	@Override
 	public List<OrderDto> getAllOrders(String userName) {
-		List<OrderModel> orders = repo.findAllPreviousOrders(userName);
+		Sort sortByPlacedDate = Sort.by(Sort.Direction.ASC, "placedAt");
+		List<OrderModel> orders = repo.findAllPreviousOrders(userName, sortByPlacedDate);
 		List<OrderDto> response = orders.stream().map(ord -> mapper.map(ord, OrderDto.class)).collect(Collectors.toList());
 		return response;
 	}
@@ -151,7 +153,9 @@ public class OrderServiceImpl extends HelpService implements OrderService {
 	
 	private Integer removeItemFromCart(OrderModel order, Integer productId) {
 		OrderItemModel cartItem = getOrderItemByProductId(order, productId).orElse(null);
-		unlinkCartWithCartItem(order, cartItem);
+		if(cartItem != null) {
+			unlinkCartWithCartItem(order, cartItem);
+		}
 		return getNumOrderItems(order);
 	}
 	

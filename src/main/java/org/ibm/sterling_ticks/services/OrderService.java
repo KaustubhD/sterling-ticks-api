@@ -13,6 +13,6 @@ public interface OrderService {
 	public CartDto getUserCart(String username);
 	public Integer getQuantityInCart(String userName, String modelNo);
 	public boolean addVoucherToCart(CartVoucherDto dto);
-	public boolean placeOrder(OrderPlaceDto dto);
+	public Integer placeOrder(OrderPlaceDto dto);
 	public List<OrderDto> getAllOrders(String userName);
 }

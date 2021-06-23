@@ -6,6 +6,7 @@ import java.util.List;
 public class CartDto {
 
 	public String userName;
+	public Float voucherDiscount;
 	public List<CartItemDto> orderItems = new ArrayList<>();
 }
 
